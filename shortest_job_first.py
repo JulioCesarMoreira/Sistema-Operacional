@@ -1,5 +1,4 @@
 # ----------------------------- First come first served -------------------------------------------
-
 # usar uma classe defirnir processo pronto
 # pid será o identificador para acessar as informações do processo
 from tkinter import *
@@ -143,13 +142,6 @@ def first_come_first_served():
         elemento = [lista[k].pid, lista[k].carga, lista[k].chegada]
         tabela_processos_prontos.insert('', END, values=elemento, tag='1')
 
-        
-#        print(str(elemento)+'\n')
-        
-
-#    tabela_processos_prontos.delete(tabela_processos_prontos.get_children('I009'))
-
-    
     v_contador_transicao = 0
     v_total_carga = 0
     v_vazao = 0
@@ -157,10 +149,8 @@ def first_come_first_served():
     v_uso_cpu = 0
     v_tempo_resposta = 0
 
-     
-
     for linha in tabela_processos_prontos.get_children():
-        print('loop')
+#        print('loop')
         count = 0
         for value in tabela_processos_prontos.item(linha)['values']:
             if count == 0:
@@ -171,26 +161,19 @@ def first_come_first_served():
                 v_item_chegada = int(value)
             count = count + 1
 
-#        print(str(v_item_pid))
-#        print(' ')
-#        print(str(v_item_carga)) 
-#        print('\n')
-
-
 #        sleep(0.1)
         v_contador_transicao   = v_contador_transicao + 1
         v_total_carga          = v_total_carga + v_item_carga
         v_total_tempo_execucao = v_contador_transicao + v_total_carga 
-        v_vazao                =  v_contador_transicao / (v_contador_transicao + v_total_carga)
+        v_vazao                = (v_contador_transicao) / (v_contador_transicao + v_total_carga)
         v_uso_cpu              = ((v_total_tempo_execucao - v_contador_transicao)/v_total_tempo_execucao)*100
         v_tempo_resposta       = v_total_tempo_execucao / v_contador_transicao
 
         tabela_processos_prontos.delete(linha)
-#        print(str(tabela_processos_prontos.get_children()))
-#
+
         processo_executando['text'] = str(v_item_pid)
         carga_executada['text']     = str(v_total_carga)
-        transicoes['text']          = str(int(v_contador_transicao-1))
+        transicoes['text']          = str(int(v_contador_transicao))
         total['text']               = str(v_total_tempo_execucao)
         vazao['text']               = str(float(v_vazao))
         uso_cpu['text']             = str(float(v_uso_cpu))
@@ -199,12 +182,6 @@ def first_come_first_served():
         tabela_processos_executados.insert('', END, values=v_item_pid, tag='1')
 
     processo_executando['text']= ''
-            
-
-
-
-
-
 
 botao = Button(janela, width=50, text='botao', command=first_come_first_served, background='green')
 botao.place(x=300,y=550)
@@ -212,5 +189,3 @@ botao.place(x=300,y=550)
 #executando janela
 janela.geometry('800x600+0+0')
 janela.mainloop()
-
-
