@@ -3,7 +3,7 @@
 # pid será o identificador para acessar as informações do processo
 from tkinter import *
 from tkinter import ttk
-from time import sleep
+
 
 janela = Tk()
 
@@ -12,7 +12,6 @@ class processo_pronto:
         self.pid = pid
         self.carga = carga
         self.chegada = chegada
-
 
 #adicionar valores específicados 
 processo_1 = processo_pronto(1001 ,18 ,0)
@@ -119,7 +118,8 @@ tempo_resposta.place(x=135,y=550)
 titulo_quantum = Label(janela, text='Quantum:', font="Arial 12")
 titulo_quantum.place(x=0,y=350)
 
-quantum = Label(janela, text='', font="Arial 12")
+
+quantum = Entry(janela)
 quantum.place(x=80,y=350)
 
 #função que executa a fila de processos
@@ -132,15 +132,16 @@ quantum.place(x=80,y=350)
 # tempo de resposta: Tempo / quantidade de processos
 #antes de iniciar ele orderna todos os processos baseado na carga em ordem crescente
 def round_robin_init():
-    v_contador_transicao = 0
-    v_total_carga = 0
-    v_vazao = 0
+    v_contador_transicao   = 0
+    v_total_carga          = 0
+    v_vazao                = 0
     v_total_tempo_execucao = 0 
-    v_uso_cpu = 0
-    v_tempo_resposta = 0
-    v_quantum = 4
-    v_carga_executada = 0
+    v_uso_cpu              = 0
+    v_tempo_resposta       = 0
+    v_quantum              = int(quantum.get())
+    v_carga_executada      = 0
 
+    quantum['text'] = str(v_quantum)
 
     def round_robin():
         nonlocal v_contador_transicao 
@@ -152,44 +153,53 @@ def round_robin_init():
         nonlocal v_quantum
         nonlocal v_carga_executada
         for linha in tabela_processos_prontos.get_children():
-    #        print('loop')
-            count = 0
-            for value in tabela_processos_prontos.item(linha)['values']:
-                if count == 0:
-                    v_item_pid = int(value)                    
-                if count == 2:
-                    v_item_chegada = int(value)
-                if count == 1:
-                    v_item_carga = int(value)
-                count = count + 1
+            if len(tabela_processos_prontos.get_children()) >= 1:
+                count = 0
+                for value in tabela_processos_prontos.item(linha)['values']:
+                    if count == 0:
+                        v_item_pid = int(value)                    
+                    if count == 2:
+                        v_item_chegada = int(value)
+                    if count == 1:
+                        v_item_carga = int(value)
+                    count = count + 1
+                    
+                if v_item_carga <= v_quantum:
+                    input("Press Enter to continue...")
+                    tabela_processos_prontos.delete(linha)
+                    processo_executando['text'] = str(v_item_pid)
+                    input("Press Enter to continue...")
+                    v_total_carga = v_total_carga + v_item_carga
+                else:
+                    v_item_carga = v_item_carga - v_quantum
+                    v_total_carga = v_total_carga + v_quantum
+                    elemento = [v_item_pid, v_item_carga, v_item_chegada]
+                    processo_executando['text'] = str(v_item_pid)
+                    tabela_processos_prontos.delete(linha)
+                    tabela_processos_prontos.insert('',END,values=elemento, tag='1')
+                    input("Press Enter to continue...")
+                    
+
+                v_contador_transicao   = v_contador_transicao + 1
+                v_total_tempo_execucao = v_contador_transicao + v_total_carga 
+                v_vazao                = (len(lista)) / (v_contador_transicao + v_total_carga)
+                v_uso_cpu              = ((v_total_tempo_execucao - v_contador_transicao)/v_total_tempo_execucao)*100
+                v_tempo_resposta       = v_total_tempo_execucao / len(lista)
+
+
                 
-            if v_item_carga <= v_quantum:
-                tabela_processos_prontos.delete(linha)
-                tabela_processos_executados.insert('', END, values=v_item_pid, tag='1')
-                v_total_carga = v_total_carga + v_item_carga
-            else:
-                v_item_carga = v_item_carga - v_quantum
-                v_total_carga = v_total_carga + v_quantum
-                tabela_processos_prontos.item(linha, text='', values=(v_item_pid, v_item_carga, v_item_chegada))
+                carga_executada['text']     = str(v_total_carga)
+                transicoes['text']          = str(int(v_contador_transicao))
+                total['text']               = str(v_total_tempo_execucao)
+                vazao['text']               = str(float(v_vazao))
+                uso_cpu['text']             = str(float(v_uso_cpu))
+                tempo_resposta['text']      = str(float(v_tempo_resposta))
                 
+                input("Press Enter to continue...")
 
-    #        sleep(0.1)
-            v_contador_transicao   = v_contador_transicao + 1
-            v_total_tempo_execucao = v_contador_transicao + v_total_carga 
-            v_vazao                = (len(lista)) / (v_contador_transicao + v_total_carga)
-            v_uso_cpu              = ((v_total_tempo_execucao - v_contador_transicao)/v_total_tempo_execucao)*100
-            v_tempo_resposta       = v_total_tempo_execucao / len(lista)
+                if v_item_carga <= v_quantum:
+                    tabela_processos_executados.insert('', END, values=v_item_pid, tag='1')
 
-
-            processo_executando['text'] = str(v_item_pid)
-            carga_executada['text']     = str(v_total_carga)
-            transicoes['text']          = str(int(v_contador_transicao))
-            total['text']               = str(v_total_tempo_execucao)
-            vazao['text']               = str(float(v_vazao))
-            uso_cpu['text']             = str(float(v_uso_cpu))
-            tempo_resposta['text']      = str(float(v_tempo_resposta))
-            
-            if len(tabela_processos_prontos.get_children()) > 0:
                 round_robin()
 
         processo_executando['text']= ''

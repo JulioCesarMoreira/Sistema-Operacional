@@ -4,7 +4,6 @@
 # pid será o identificador para acessar as informações do processo
 from tkinter import *
 from tkinter import ttk
-from time import sleep
 
 janela = Tk()
 
@@ -135,14 +134,13 @@ def first_come_first_served():
     v_tempo_resposta = 0 
 
     for i in range(len(lista)):
-        sleep(0.1)
         v_contador_transicao   = v_contador_transicao + 1
         v_total_carga          = v_total_carga + int(lista[i].carga)
         v_total_tempo_execucao = v_contador_transicao + v_total_carga -1
         v_vazao                =  v_contador_transicao / (i + v_total_carga)
         v_uso_cpu              = ((v_total_tempo_execucao - v_contador_transicao + 1)/v_total_tempo_execucao)*100
         v_tempo_resposta       = v_total_tempo_execucao / v_contador_transicao
-
+        input("Press Enter to continue...")
         tabela_processos_prontos.delete(lista_tabela_prontos[i])
 
         processo_executando['text'] = str(lista[i].pid)
@@ -152,19 +150,12 @@ def first_come_first_served():
         vazao['text']               = str(float(v_vazao))
         uso_cpu['text']             = str(float(v_uso_cpu))
         tempo_resposta['text']      = str(float(v_tempo_resposta))
-        
+        input("Press Enter to continue...")
         tabela_processos_executados.insert('', END, values=lista[i].pid, tag='1')
-        
         
     
     processo_executando['text']= ''
             
-
-
-
-
-
-
 botao = Button(janela, width=50, text='botao', command=first_come_first_served, background='green')
 botao.place(x=300,y=550)
 

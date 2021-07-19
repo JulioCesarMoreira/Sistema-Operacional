@@ -3,7 +3,6 @@
 # pid será o identificador para acessar as informações do processo
 from tkinter import *
 from tkinter import ttk
-from time import sleep
 
 janela = Tk()
 
@@ -150,7 +149,6 @@ def shortest_job_first():
     v_tempo_resposta = 0
 
     for linha in tabela_processos_prontos.get_children():
-#        print('loop')
         count = 0
         for value in tabela_processos_prontos.item(linha)['values']:
             if count == 0:
@@ -161,7 +159,8 @@ def shortest_job_first():
                 v_item_chegada = int(value)
             count = count + 1
 
-#        sleep(0.1)
+        input("Press Enter to continue...")
+
         v_contador_transicao   = v_contador_transicao + 1
         v_total_carga          = v_total_carga + v_item_carga
         v_total_tempo_execucao = v_contador_transicao + v_total_carga 
@@ -178,7 +177,7 @@ def shortest_job_first():
         vazao['text']               = str(float(v_vazao))
         uso_cpu['text']             = str(float(v_uso_cpu))
         tempo_resposta['text']      = str(float(v_tempo_resposta))
-        
+        input("Press Enter to continue...")
         tabela_processos_executados.insert('', END, values=v_item_pid, tag='1')
 
     processo_executando['text']= ''
