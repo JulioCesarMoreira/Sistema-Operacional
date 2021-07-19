@@ -125,7 +125,7 @@ tempo_resposta.place(x=135,y=550)
 # tempo de resposta: Tempo / quantidade de processos
 #antes de iniciar ele orderna todos os processos baseado na carga em ordem crescente
 
-def first_come_first_served():
+def shortest_job_first():
     for i in lista_tabela_prontos:
         tabela_processos_prontos.delete(i)
 #ordena lista
@@ -183,7 +183,7 @@ def first_come_first_served():
 
     processo_executando['text']= ''
 
-botao = Button(janela, width=50, text='botao', command=first_come_first_served, background='green')
+botao = Button(janela, width=50, text='botao', command=shortest_job_first, background='green')
 botao.place(x=300,y=550)
 
 #executando janela
