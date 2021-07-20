@@ -133,25 +133,37 @@ def first_come_first_served():
     v_uso_cpu = 0
     v_tempo_resposta = 0 
 
-    for i in range(len(lista)):
-        v_contador_transicao   = v_contador_transicao + 1
-        v_total_carga          = v_total_carga + int(lista[i].carga)
-        v_total_tempo_execucao = v_contador_transicao + v_total_carga -1
-        v_vazao                =  v_contador_transicao / (i + v_total_carga)
-        v_uso_cpu              = ((v_total_tempo_execucao - v_contador_transicao + 1)/v_total_tempo_execucao)*100
-        v_tempo_resposta       = v_total_tempo_execucao / v_contador_transicao
-        input("Press Enter to continue...")
-        tabela_processos_prontos.delete(lista_tabela_prontos[i])
+    for linha in tabela_processos_prontos.get_children():
+        count = 0
+        for value in tabela_processos_prontos.item(linha)['values']:
+            if count == 0:
+                v_item_pid = int(value)
+            if count == 1:
+                v_item_carga = int(value)
+            if count == 2:
+                v_item_chegada = int(value)
+            count = count + 1
 
-        processo_executando['text'] = str(lista[i].pid)
+        v_contador_transicao   = v_contador_transicao + 1
+        v_total_carga          = v_total_carga + v_item_carga
+        v_total_tempo_execucao = v_contador_transicao + v_total_carga 
+        v_vazao                = (v_contador_transicao) / (v_contador_transicao + v_total_carga)
+        v_uso_cpu              = ((v_total_tempo_execucao - v_contador_transicao)/v_total_tempo_execucao)*100
+        v_tempo_resposta       = v_total_tempo_execucao / v_contador_transicao
+
+        input("Press Enter to continue...")
+        tabela_processos_prontos.delete(linha)
+
+        processo_executando['text'] = str(v_item_pid)
         carga_executada['text']     = str(v_total_carga)
-        transicoes['text']          = str(int(v_contador_transicao-1))
+        transicoes['text']          = str(int(v_contador_transicao))
         total['text']               = str(v_total_tempo_execucao)
         vazao['text']               = str(float(v_vazao))
         uso_cpu['text']             = str(float(v_uso_cpu))
         tempo_resposta['text']      = str(float(v_tempo_resposta))
         input("Press Enter to continue...")
-        tabela_processos_executados.insert('', END, values=lista[i].pid, tag='1')
+        processo_executando['text']= ''
+        tabela_processos_executados.insert('', END, values=v_item_pid, tag='1')
         
     
     processo_executando['text']= ''

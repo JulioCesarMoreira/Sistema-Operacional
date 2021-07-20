@@ -178,6 +178,7 @@ def shortest_job_first():
         uso_cpu['text']             = str(float(v_uso_cpu))
         tempo_resposta['text']      = str(float(v_tempo_resposta))
         input("Press Enter to continue...")
+        processo_executando['text']= ''
         tabela_processos_executados.insert('', END, values=v_item_pid, tag='1')
 
     processo_executando['text']= ''

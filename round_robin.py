@@ -170,14 +170,22 @@ def round_robin_init():
                     processo_executando['text'] = str(v_item_pid)
                     input("Press Enter to continue...")
                     v_total_carga = v_total_carga + v_item_carga
+                    processo_executando['text']= ''
+                    tabela_processos_executados.insert('', END, values=v_item_pid, tag='1')
                 else:
                     v_item_carga = v_item_carga - v_quantum
                     v_total_carga = v_total_carga + v_quantum
                     elemento = [v_item_pid, v_item_carga, v_item_chegada]
-                    processo_executando['text'] = str(v_item_pid)
-                    tabela_processos_prontos.delete(linha)
-                    tabela_processos_prontos.insert('',END,values=elemento, tag='1')
+                    
                     input("Press Enter to continue...")
+                    processo_executando['text'] = str(v_item_pid)
+                    
+                    input("Press Enter to continue...")
+                    tabela_processos_prontos.delete(linha)
+                    
+                    input("Press Enter to continue...")
+                    processo_executando['text']= ''
+                    tabela_processos_prontos.insert('',END,values=elemento, tag='1')
                     
 
                 v_contador_transicao   = v_contador_transicao + 1
@@ -196,9 +204,6 @@ def round_robin_init():
                 tempo_resposta['text']      = str(float(v_tempo_resposta))
                 
                 input("Press Enter to continue...")
-
-                if v_item_carga <= v_quantum:
-                    tabela_processos_executados.insert('', END, values=v_item_pid, tag='1')
 
                 round_robin()
 
